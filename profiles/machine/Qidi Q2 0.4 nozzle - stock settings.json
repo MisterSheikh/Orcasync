@@ -1,0 +1,9 @@
+{
+    "from": "User",
+    "inherits": "Qidi Q2 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Qidi Q2 0.4 nozzle - stock settings",
+    "print_host": "192.168.2.165",
+    "printer_settings_id": "Qidi Q2 0.4 nozzle - stock settings",
+    "version": "2.3.1.10"
+}

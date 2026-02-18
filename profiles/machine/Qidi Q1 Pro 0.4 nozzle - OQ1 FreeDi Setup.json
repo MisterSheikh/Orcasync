@@ -4,11 +4,12 @@
     "is_custom_defined": "0",
     "machine_end_gcode": "PRINT_END\n",
     "machine_pause_gcode": "PAUSE",
-    "machine_start_gcode": "PRINT_START BED=[first_layer_bed_temperature] HOTEND=[first_layer_temperature] CHAMBER=[chamber_temperature]\nM83\nG0 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-5} Z5 F6000.0 ; position 5mm down from the lower left of the first layer at 5mm from bed\nG0 Z[initial_layer_print_height] F600 ; Move down to first layer height at slower speed\nG1 E3 F1800 ; Prime the extruder with 3mm of filament at 1800mm/min\nG4 P300 ; wait 300ms before drawing line\nG1 X{first_layer_print_min[0]+50} Y{first_layer_print_min[1]-5} E{50* 0.5 * initial_layer_print_height * nozzle_diameter[0]} F1000 ; extrude filament 50mm in the x direction\n; G92 E0 ; reset extruder\nG1 X{first_layer_print_min[0]+56} F5000.0 ; move an additional 6mm without extruding\nG1 Z1 F600 ; Z-hop up to avoid collision",
+    "machine_start_gcode": "PRINT_START BED=[first_layer_bed_temperature] HOTEND=[first_layer_temperature] CHAMBER=[chamber_temperature]\nM83\nG0 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-5} Z5 F6000.0 ; position 5mm down from the lower left of the first layer at 5mm from bed\nG0 Z[initial_layer_print_height] F600 ; Move down to first layer height at slower speed\nG1 E3 F1800 ; Prime the extruder with 3mm of filament at 1800mm/min\nG4 P300 ; wait 300ms before drawing line\nG1 X{first_layer_print_min[0]+50} Y{first_layer_print_min[1]-5} E{50* 0.5 * initial_layer_print_height * nozzle_diameter[0]} F1000 ; extrude filament 50mm in the x direction\nG92 E0 ; reset extruder\nG1 X{first_layer_print_min[0]+56} F5000.0 ; move an additional 6mm without extruding\nG1 Z1 F600 ; Z-hop up to avoid collision",
     "name": "Qidi Q1 Pro 0.4 nozzle - OQ1 FreeDi Setup",
     "print_host": "192.168.2.151",
     "printer_settings_id": "Qidi Q1 Pro 0.4 nozzle - OQ1 FreeDi Setup",
     "purge_in_prime_tower": "0",
+    "resonance_avoidance": "1",
     "retract_lift_below": [
         "239"
     ],

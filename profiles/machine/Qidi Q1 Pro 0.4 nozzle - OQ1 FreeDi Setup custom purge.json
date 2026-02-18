@@ -1,0 +1,19 @@
+{
+    "from": "User",
+    "inherits": "Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "machine_end_gcode": "PRINT_END\n",
+    "machine_pause_gcode": "PAUSE",
+    "machine_start_gcode": "PRINT_START BED=[first_layer_bed_temperature] HOTEND=[first_layer_temperature] CHAMBER=[chamber_temperature]\nM83\nG0 X{max(first_layer_print_min[0], 0)} Y{first_layer_print_min[1]-5} Z5 F6000.0 ; position 5mm down from the lower left of the first layer at 5mm from bed\nG0 Z[initial_layer_print_height] F600 ; Move down to first layer height at slower speed\nG1 E3 F1800 ; Prime the extruder with 3mm of filament at 1800mm/min\nG4 P300 ; wait 300ms before drawing line\nG1 X{max(first_layer_print_min[0], 0)+50} Y{first_layer_print_min[1]-5} E{50* 0.5 * initial_layer_print_height * nozzle_diameter[0]} F1000 ; extrude filament 50mm in the x direction\nG1 X{max(first_layer_print_min[0], 0)+53} Z0 ; move an additional 3mm without extruding while scraping nozzle on bed\nG1 X{max(first_layer_print_min[0], 0)+55} ; move an additional 2mm without extruding while scraping nozzle on bed\nG1 Z1 F600 ; Z-hop up to avoid collision",
+    "name": "Qidi Q1 Pro 0.4 nozzle - OQ1 FreeDi Setup custom purge",
+    "print_host": "192.168.2.145",
+    "printer_settings_id": "Qidi Q1 Pro 0.4 nozzle - OQ1 FreeDi Setup custom purge",
+    "printer_structure": "corexy",
+    "purge_in_prime_tower": "0",
+    "resonance_avoidance": "1",
+    "retract_lift_below": [
+        "239"
+    ],
+    "single_extruder_multi_material": "0",
+    "version": "2.1.1.0"
+}

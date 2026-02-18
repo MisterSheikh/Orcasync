@@ -5,7 +5,6 @@
     "machine_end_gcode": "PRINT_END",
     "machine_start_gcode": "PRINT_START BED=[first_layer_bed_temperature] HOTEND=[first_layer_temperature] CHAMBER=[chamber_temperature]\nG92 E0.0 ; reset extruder\nG1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-5} Z0.8 F6000.0 ; position 5mm down from the lower left of the first layer\nG1 X{first_layer_print_min[0]+30} Y{first_layer_print_min[1]-5} E15 F180.0 ; extrude 15mm of filament in the x direction\nG92 E0.0 ; reset extruder\n# G1 E-0.5 F2100 ; small retraction\nG1 X{first_layer_print_min[0]+40} F6000.0 ; move an additional 10mm without extruding\nG92 E0.0 ; reset extruder",
     "name": "Qidi Q1 Pro 0.4 nozzle - Wifi",
-    "print_host": "192.168.2.145",
     "printer_settings_id": "Qidi Q1 Pro 0.4 nozzle - Wifi",
     "purge_in_prime_tower": "0",
     "retract_lift_below": [

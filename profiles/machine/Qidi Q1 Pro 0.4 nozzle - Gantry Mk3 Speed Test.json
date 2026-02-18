@@ -1,0 +1,47 @@
+{
+    "bed_exclude_area": [],
+    "from": "User",
+    "inherits": "Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "machine_end_gcode": "PRINT_END\n",
+    "machine_max_acceleration_extruding": [
+        "35000"
+    ],
+    "machine_max_acceleration_x": [
+        "35000"
+    ],
+    "machine_max_acceleration_y": [
+        "35000"
+    ],
+    "machine_max_acceleration_z": [
+        "600"
+    ],
+    "machine_max_jerk_x": [
+        "50"
+    ],
+    "machine_max_jerk_y": [
+        "50"
+    ],
+    "machine_pause_gcode": "PAUSE",
+    "machine_start_gcode": "PRINT_START BED=[first_layer_bed_temperature] HOTEND=[first_layer_temperature] CHAMBER=[chamber_temperature]\nG92 E0.0 ; reset extruder\nG1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-5} Z0.8 F6000.0 ; position 5mm down from the lower left of the first layer\nG1 X{first_layer_print_min[0]+30} Y{first_layer_print_min[1]-5} E20 F240.0 ; extrude 20mm of filament in the x direction\nG92 E0.0 ; reset extruder\nG1 E-0.5 F2100 ; small retraction\nG1 X{first_layer_print_min[0]+40} F6000.0 ; move an additional 10mm without extruding\nG92 E0.0 ; reset extruder",
+    "name": "Qidi Q1 Pro 0.4 nozzle - Gantry Mk3 Speed Test",
+    "print_host": "192.168.2.169",
+    "printable_area": [
+        "0x0",
+        "242x0",
+        "242x235",
+        "0x235"
+    ],
+    "printer_settings_id": "Qidi Q1 Pro 0.4 nozzle - Gantry Mk3 Speed Test",
+    "printer_structure": "corexy",
+    "purge_in_prime_tower": "0",
+    "resonance_avoidance": "1",
+    "retract_lift_below": [
+        "239"
+    ],
+    "single_extruder_multi_material": "0",
+    "version": "2.1.1.0",
+    "z_hop": [
+        "0.2"
+    ]
+}

@@ -12,7 +12,7 @@
         "39.37"
     ],
     "filament_max_volumetric_speed": [
-        "10"
+        "12"
     ],
     "filament_retraction_length": [
         "0.4"
@@ -49,7 +49,7 @@
         "0.25"
     ],
     "slow_down_layer_time": [
-        "6"
+        "4"
     ],
     "version": "2.2.0.4"
 }

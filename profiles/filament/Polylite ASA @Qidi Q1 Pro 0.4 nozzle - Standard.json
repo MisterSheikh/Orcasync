@@ -1,18 +1,24 @@
 {
     "complete_print_exhaust_fan_speed": [
-        "80"
+        "50"
     ],
     "during_print_exhaust_fan_speed": [
-        "70"
+        "30"
     ],
     "fan_max_speed": [
         "40"
+    ],
+    "fan_min_speed": [
+        "20"
     ],
     "filament_cost": [
         "42"
     ],
     "filament_density": [
         "1.13"
+    ],
+    "filament_max_volumetric_speed": [
+        "18"
     ],
     "filament_retraction_length": [
         "0.6"

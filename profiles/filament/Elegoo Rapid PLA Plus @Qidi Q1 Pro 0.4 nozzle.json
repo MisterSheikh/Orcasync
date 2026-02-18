@@ -2,6 +2,13 @@
     "activate_air_filtration": [
         "0"
     ],
+    "additional_cooling_fan_speed": [
+        "70"
+    ],
+    "compatible_printers": [
+        "Qidi Q2 0.4 nozzle",
+        "Qidi Q2 0.4 nozzle - Copy"
+    ],
     "default_filament_colour": [
         "#000000"
     ],
@@ -26,6 +33,9 @@
     "filament_settings_id": [
         "Elegoo Rapid PLA Plus @Qidi Q1 Pro 0.4 nozzle"
     ],
+    "filament_type": [
+        "PLA+"
+    ],
     "filament_vendor": [
         "Elegoo"
     ],
@@ -33,12 +43,6 @@
     "inherits": "QIDI PLA Rapido @Qidi Q1 Pro 0.4 nozzle",
     "is_custom_defined": "0",
     "name": "Elegoo Rapid PLA Plus @Qidi Q1 Pro 0.4 nozzle",
-    "nozzle_temperature": [
-        "220"
-    ],
-    "nozzle_temperature_initial_layer": [
-        "215"
-    ],
     "nozzle_temperature_range_high": [
         "230"
     ],

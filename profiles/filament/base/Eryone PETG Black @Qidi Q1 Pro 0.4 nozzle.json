@@ -227,6 +227,9 @@
     "internal_bridge_fan_speed": [
         "-1"
     ],
+    "ironing_fan_speed": [
+        "-1"
+    ],
     "is_custom_defined": "0",
     "name": "Eryone PETG Black @Qidi Q1 Pro 0.4 nozzle",
     "nozzle_temperature": [

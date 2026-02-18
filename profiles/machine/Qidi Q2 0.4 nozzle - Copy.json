@@ -1,0 +1,12 @@
+{
+    "from": "User",
+    "inherits": "Qidi Q2 0.4 nozzle",
+    "is_custom_defined": "0",
+    "machine_end_gcode": "DISABLE_BOX_HEATER\nM141 S0\nM140 S0\nDISABLE_ALL_SENSOR\nG1 E-3 F1800\nG0 Z{max_layer_z + 3} F600\nG0 Y270 F12000\nG0 X90 Y270 F12000\n{if max_layer_z < max_print_height / 2}G1 Z{max_print_height / 2 + 10} F600{else}G1 Z{min(max_print_height, max_layer_z + 3)}{endif}\nM104 S0",
+    "machine_start_gcode": "PRINT_START BED=[bed_temperature_initial_layer_single] HOTEND=[nozzle_temperature_initial_layer] CHAMBER=[chamber_temperature] EXTRUDER=[initial_no_support_extruder]\nSET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]\nG92 E0.0 ; reset extruder\nG1 X{first_layer_print_min[0]} Y{first_layer_print_min[1]-5} Z0.8 F6000.0 ; position 5mm down from the lower left of the first layer\nG1 X{first_layer_print_min[0]+30} Y{first_layer_print_min[1]-5} E20 F240.0 ; extrude 20mm of filament in the x direction\nG92 E0.0 ; reset extruder\nG1 E-0.5 F2100 ; small retraction\nG1 X{first_layer_print_min[0]+40} F6000.0 ; move an additional 10mm without extruding\nG92 E0.0 ; reset extruder\nG1 Z1 F600",
+    "name": "Qidi Q2 0.4 nozzle - Copy",
+    "print_host": "192.168.2.163",
+    "printer_settings_id": "Qidi Q2 0.4 nozzle - Copy",
+    "resonance_avoidance": "1",
+    "version": "2.3.1.10"
+}

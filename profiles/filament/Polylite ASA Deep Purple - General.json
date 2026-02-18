@@ -1,0 +1,32 @@
+{
+    "compatible_printers": [],
+    "complete_print_exhaust_fan_speed": [
+        "70"
+    ],
+    "default_filament_colour": [
+        "#370037"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "70"
+    ],
+    "filament_cost": [
+        "27.1"
+    ],
+    "filament_density": [
+        "1.13"
+    ],
+    "filament_retraction_length": [
+        "0.6"
+    ],
+    "filament_settings_id": [
+        "Polylite ASA Deep Purple - General"
+    ],
+    "filament_vendor": [
+        "Polymaker"
+    ],
+    "from": "User",
+    "inherits": "QIDI ASA @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Polylite ASA Deep Purple - General",
+    "version": "2.2.0.4"
+}

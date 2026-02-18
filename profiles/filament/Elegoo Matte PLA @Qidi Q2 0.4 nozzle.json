@@ -1,0 +1,37 @@
+{
+    "default_filament_colour": [
+        "#B0F7D0"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "50"
+    ],
+    "filament_cost": [
+        "25"
+    ],
+    "filament_density": [
+        "1.26"
+    ],
+    "filament_flow_ratio": [
+        "0.99"
+    ],
+    "filament_settings_id": [
+        "Elegoo Matte PLA @Qidi Q2 0.4 nozzle"
+    ],
+    "filament_vendor": [
+        "Elegoo"
+    ],
+    "from": "User",
+    "inherits": "QIDI PLA Matte Basic @Qidi Q2 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Elegoo Matte PLA @Qidi Q2 0.4 nozzle",
+    "nozzle_temperature_range_high": [
+        "230"
+    ],
+    "pressure_advance": [
+        "0.037"
+    ],
+    "slow_down_layer_time": [
+        "6"
+    ],
+    "version": "2.3.1.10"
+}
