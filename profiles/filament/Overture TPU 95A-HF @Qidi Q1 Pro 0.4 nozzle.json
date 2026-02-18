@@ -1,0 +1,31 @@
+{
+    "default_filament_colour": [
+        "#303030"
+    ],
+    "filament_cost": [
+        "39.37"
+    ],
+    "filament_max_volumetric_speed": [
+        "8"
+    ],
+    "filament_settings_id": [
+        "Overture TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle"
+    ],
+    "filament_vendor": [
+        "Overture"
+    ],
+    "from": "User",
+    "inherits": "Qidi TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Overture TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle",
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "nozzle_temperature_range_low": [
+        "220"
+    ],
+    "slow_down_min_speed": [
+        "30"
+    ],
+    "version": "2.2.0.4"
+}

@@ -4,7 +4,9 @@ This repo includes a fast MVP CLI: `sync.py`.
 
 ## Storage Locations (explicit)
 
-- Local Orca data (live files on your machine): configured in `./.orcasync/config.json` as `local_orca_dir`
+- Local Orca base dir (live files on your machine): configured as `local_orca_dir`
+- Local sync scope under that base dir: configured as `local_scope_subdir` (default `user/default`)
+- Only these folders are synced from that scope: `sync_folders` (default `filament`, `machine`, `process`)
 - Repo mirror (Git-tracked files pushed to GitHub): `./profiles/`
 - Last-sync baseline for conflict detection: `./.orcasync/state.json`
 - Tool config: `./.orcasync/config.json`
@@ -43,3 +45,4 @@ python3 sync.py pull
 
 - `sync.py` auto-creates `./.orcasync/config.json` with a default OrcaSlicer path.
 - If OrcaSlicer is installed in a custom location, edit `local_orca_dir` in `./.orcasync/config.json`.
+- By default the script syncs only `user/default/filament`, `user/default/machine`, and `user/default/process`.

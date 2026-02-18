@@ -1,0 +1,52 @@
+{
+    "activate_air_filtration": [
+        "0"
+    ],
+    "default_filament_colour": [
+        "#000000"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "0"
+    ],
+    "filament_cost": [
+        "25"
+    ],
+    "filament_density": [
+        "1.23"
+    ],
+    "filament_max_volumetric_speed": [
+        "23"
+    ],
+    "filament_notes": [
+        "Any of 210, 215 or 220C seem like good temperatures to use.\n0.98 - 1.00 are viable for flow rate.\nMaximum volumetric flow rate can do about 22 ish easy at 220 and increases at 230 but part cooling starts becoming a factor. Also get new spool feeding system to make it easier and smoother to feed."
+    ],
+    "filament_retraction_length": [
+        "0.4"
+    ],
+    "filament_settings_id": [
+        "Elegoo Rapid PLA Plus @Qidi Q1 Pro 0.4 nozzle"
+    ],
+    "filament_vendor": [
+        "Elegoo"
+    ],
+    "from": "User",
+    "inherits": "QIDI PLA Rapido @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Elegoo Rapid PLA Plus @Qidi Q1 Pro 0.4 nozzle",
+    "nozzle_temperature": [
+        "220"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "215"
+    ],
+    "nozzle_temperature_range_high": [
+        "230"
+    ],
+    "nozzle_temperature_range_low": [
+        "200"
+    ],
+    "slow_down_layer_time": [
+        "5"
+    ],
+    "version": "2.2.0.4"
+}

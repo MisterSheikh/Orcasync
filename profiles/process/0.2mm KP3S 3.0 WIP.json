@@ -1,0 +1,19 @@
+{
+    "bottom_shell_layers": "4",
+    "enable_support": "0",
+    "from": "User",
+    "inherits": "0.20mm Standard @Kingroon KP3S PRO S1",
+    "initial_layer_infill_speed": "40",
+    "initial_layer_speed": "30",
+    "inner_wall_speed": "60",
+    "is_custom_defined": "0",
+    "name": "0.2mm KP3S 3.0 WIP",
+    "outer_wall_speed": "40",
+    "print_settings_id": "0.2mm KP3S 3.0 WIP",
+    "skirt_distance": "5",
+    "skirt_height": "2",
+    "skirt_loops": "3",
+    "slow_down_layers": "2",
+    "sparse_infill_pattern": "cubic",
+    "version": "1.8.0.0"
+}

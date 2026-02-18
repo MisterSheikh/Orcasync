@@ -1,0 +1,16 @@
+{
+    "filament_settings_id": [
+        "QIDI PLA Rapido @Qidi Q1 Pro 0.4 nozzle - Elegoo Rapid PLA Plus"
+    ],
+    "from": "User",
+    "hot_plate_temp_initial_layer": [
+        "61"
+    ],
+    "inherits": "QIDI PLA Rapido @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "QIDI PLA Rapido @Qidi Q1 Pro 0.4 nozzle - Elegoo Rapid PLA Plus",
+    "nozzle_temperature": [
+        "220"
+    ],
+    "version": "2.2.0.4"
+}

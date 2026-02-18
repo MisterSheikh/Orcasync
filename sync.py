@@ -95,8 +95,12 @@ def write_default_config_if_missing() -> None:
         return
 
     cfg = {
-        # Local live OrcaSlicer directory this machine reads/writes.
+        # Local OrcaSlicer base directory.
         "local_orca_dir": detect_default_orca_path(),
+        # Subdirectory under local_orca_dir that contains user presets.
+        "local_scope_subdir": "user/default",
+        # Only these top-level preset folders are synced.
+        "sync_folders": ["filament", "machine", "process"],
         # Mirror directory inside this repo that will be committed/pushed.
         "repo_mirror_dir": "./profiles",
         # File/dir patterns to ignore from syncing.
@@ -122,13 +126,26 @@ def load_config() -> dict:
 
     local_dir = expand_path(cfg["local_orca_dir"])
     mirror_raw = cfg.get("repo_mirror_dir", "./profiles")
+    cfg.setdefault("local_scope_subdir", "user/default")
+    cfg.setdefault("sync_folders", ["filament", "machine", "process"])
 
     # Support either relative repo path or absolute override.
     mirror_dir = Path(mirror_raw)
     if not mirror_dir.is_absolute():
         mirror_dir = (REPO_ROOT / mirror_dir).resolve()
 
+    # If user points directly to .../user/default, do not append scope twice.
+    parts_lower = [p.lower() for p in local_dir.parts]
+    points_to_user_default = len(parts_lower) >= 2 and parts_lower[-2:] == ["user", "default"]
+
+    scope_subdir = str(cfg.get("local_scope_subdir", "")).strip().strip("/\\")
+    if scope_subdir and not points_to_user_default:
+        local_scope = (local_dir / Path(scope_subdir)).resolve()
+    else:
+        local_scope = local_dir
+
     cfg["_local_dir_resolved"] = local_dir
+    cfg["_local_scope_resolved"] = local_scope
     cfg["_mirror_dir_resolved"] = mirror_dir
     cfg.setdefault("exclude_substrings", [])
     return cfg
@@ -176,6 +193,43 @@ def collect_hashes(root: Path, exclude_substrings: List[str]) -> Dict[str, str]:
         if is_excluded(rel, exclude_substrings):
             continue
         result[rel] = sha256_file(p)
+    return result
+
+
+def collect_hashes_scoped(root: Path, folders: List[str], exclude_substrings: List[str]) -> Dict[str, str]:
+    """Return hashes for selected top-level folders under root only.
+
+    Example:
+    - root: /.../OrcaSlicer/user/default
+    - folders: ["filament", "machine", "process"]
+    """
+    result: Dict[str, str] = {}
+    if not root.exists():
+        return result
+
+    # Keep order stable while preventing duplicate folder entries.
+    normalized_folders = []
+    seen = set()
+    for folder in folders:
+        name = str(folder).strip().strip("/\\")
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        normalized_folders.append(name)
+
+    for folder in normalized_folders:
+        folder_root = root / folder
+        if not folder_root.exists():
+            continue
+        for p in folder_root.rglob("*"):
+            if not p.is_file():
+                continue
+            rel_in_folder = p.relative_to(folder_root).as_posix()
+            rel = f"{folder}/{rel_in_folder}" if rel_in_folder else folder
+            if is_excluded(rel, exclude_substrings):
+                continue
+            result[rel] = sha256_file(p)
+
     return result
 
 
@@ -279,7 +333,9 @@ def print_storage_locations(cfg: dict) -> None:
     This is intentionally verbose so users always know where data lives.
     """
     print("Storage locations:")
-    print(f"  Local OrcaSlicer live data: {cfg['_local_dir_resolved']}")
+    print(f"  Local OrcaSlicer base dir:  {cfg['_local_dir_resolved']}")
+    print(f"  Local sync scope root:      {cfg['_local_scope_resolved']}")
+    print(f"  Synced preset folders:      {', '.join(cfg.get('sync_folders', []))}")
     print(f"  Repo mirror (Git-tracked):  {cfg['_mirror_dir_resolved']}")
     print(f"  Sync baseline state:         {STATE_PATH}")
     print(f"  Tool config:                 {CONFIG_PATH}")
@@ -287,12 +343,13 @@ def print_storage_locations(cfg: dict) -> None:
 
 def cmd_status(cfg: dict) -> int:
     """Show differences and conflicts without changing anything."""
-    local_dir: Path = cfg["_local_dir_resolved"]
+    local_scope: Path = cfg["_local_scope_resolved"]
     mirror_dir: Path = cfg["_mirror_dir_resolved"]
     excludes: List[str] = cfg["exclude_substrings"]
+    sync_folders: List[str] = cfg["sync_folders"]
 
-    local_hashes = collect_hashes(local_dir, excludes)
-    mirror_hashes = collect_hashes(mirror_dir, excludes)
+    local_hashes = collect_hashes_scoped(local_scope, sync_folders, excludes)
+    mirror_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
     base_hashes = load_state()
 
     diff = compute_three_way(local_hashes, mirror_hashes, base_hashes)
@@ -321,18 +378,19 @@ def cmd_push(cfg: dict, message: str) -> int:
     Push is blocked if conflicts are detected so we never overwrite divergent
     edits silently.
     """
-    local_dir: Path = cfg["_local_dir_resolved"]
+    local_scope: Path = cfg["_local_scope_resolved"]
     mirror_dir: Path = cfg["_mirror_dir_resolved"]
     excludes: List[str] = cfg["exclude_substrings"]
+    sync_folders: List[str] = cfg["sync_folders"]
 
-    if not local_dir.exists():
-        print(f"Local OrcaSlicer directory does not exist: {local_dir}")
+    if not local_scope.exists():
+        print(f"Local OrcaSlicer sync scope does not exist: {local_scope}")
         return 2
 
     mirror_dir.mkdir(parents=True, exist_ok=True)
 
-    local_hashes = collect_hashes(local_dir, excludes)
-    mirror_hashes = collect_hashes(mirror_dir, excludes)
+    local_hashes = collect_hashes_scoped(local_scope, sync_folders, excludes)
+    mirror_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
     base_hashes = load_state()
     diff = compute_three_way(local_hashes, mirror_hashes, base_hashes)
 
@@ -350,12 +408,12 @@ def cmd_push(cfg: dict, message: str) -> int:
     to_remove = sorted(set(diff.only_mirror + diff.changed_mirror))
 
     for rel in to_copy:
-        copy_file(local_dir, mirror_dir, rel)
+        copy_file(local_scope, mirror_dir, rel)
     for rel in to_remove:
         remove_file(mirror_dir, rel)
 
     # Recompute mirror hashes after write and persist as the new baseline.
-    new_hashes = collect_hashes(mirror_dir, excludes)
+    new_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
     save_state(new_hashes)
 
     # Commit and push all resulting changes (mirror files + state file).
@@ -376,9 +434,10 @@ def cmd_pull(cfg: dict) -> int:
 
     Pull is blocked if conflicts are detected so we avoid clobbering local edits.
     """
-    local_dir: Path = cfg["_local_dir_resolved"]
+    local_scope: Path = cfg["_local_scope_resolved"]
     mirror_dir: Path = cfg["_mirror_dir_resolved"]
     excludes: List[str] = cfg["exclude_substrings"]
+    sync_folders: List[str] = cfg["sync_folders"]
 
     # Bring repo mirror up to date first.
     try:
@@ -387,8 +446,8 @@ def cmd_pull(cfg: dict) -> int:
         print(e.stderr or e.stdout)
         return e.returncode or 1
 
-    local_hashes = collect_hashes(local_dir, excludes)
-    mirror_hashes = collect_hashes(mirror_dir, excludes)
+    local_hashes = collect_hashes_scoped(local_scope, sync_folders, excludes)
+    mirror_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
     base_hashes = load_state()
     diff = compute_three_way(local_hashes, mirror_hashes, base_hashes)
 
@@ -402,17 +461,17 @@ def cmd_pull(cfg: dict) -> int:
         return 1
 
     # Apply mirror truth to local for changed/added/removed paths.
-    local_dir.mkdir(parents=True, exist_ok=True)
+    local_scope.mkdir(parents=True, exist_ok=True)
     to_copy = sorted(set(diff.only_mirror + diff.changed_mirror))
     to_remove = sorted(set(diff.only_local + diff.changed_local))
 
     for rel in to_copy:
-        copy_file(mirror_dir, local_dir, rel)
+        copy_file(mirror_dir, local_scope, rel)
     for rel in to_remove:
-        remove_file(local_dir, rel)
+        remove_file(local_scope, rel)
 
     # Baseline should match the mirror after a successful pull apply.
-    new_hashes = collect_hashes(mirror_dir, excludes)
+    new_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
     save_state(new_hashes)
 
     print("Pull sync applied to local OrcaSlicer directory.")

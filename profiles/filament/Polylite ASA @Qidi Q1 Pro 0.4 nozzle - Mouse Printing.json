@@ -1,0 +1,25 @@
+{
+    "complete_print_exhaust_fan_speed": [
+        "80"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "100"
+    ],
+    "filament_density": [
+        "1.13"
+    ],
+    "filament_retraction_length": [
+        "0.4"
+    ],
+    "filament_settings_id": [
+        "Polylite ASA @Qidi Q1 Pro 0.4 nozzle - Mouse Printing"
+    ],
+    "from": "User",
+    "inherits": "QIDI ASA @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Polylite ASA @Qidi Q1 Pro 0.4 nozzle - Mouse Printing",
+    "pressure_advance": [
+        "0.0358"
+    ],
+    "version": "2.2.0.4"
+}

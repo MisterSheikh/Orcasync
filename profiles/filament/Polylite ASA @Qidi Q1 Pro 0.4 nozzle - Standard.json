@@ -1,0 +1,40 @@
+{
+    "complete_print_exhaust_fan_speed": [
+        "80"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "70"
+    ],
+    "fan_max_speed": [
+        "40"
+    ],
+    "filament_cost": [
+        "42"
+    ],
+    "filament_density": [
+        "1.13"
+    ],
+    "filament_retraction_length": [
+        "0.6"
+    ],
+    "filament_settings_id": [
+        "Polylite ASA @Qidi Q1 Pro 0.4 nozzle - Standard"
+    ],
+    "filament_vendor": [
+        "Polymaker"
+    ],
+    "from": "User",
+    "inherits": "QIDI ASA @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Polylite ASA @Qidi Q1 Pro 0.4 nozzle - Standard",
+    "nozzle_temperature_initial_layer": [
+        "255"
+    ],
+    "overhang_fan_speed": [
+        "80"
+    ],
+    "slow_down_layer_time": [
+        "5"
+    ],
+    "version": "2.2.0.4"
+}

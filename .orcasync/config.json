@@ -1,5 +1,11 @@
 {
   "local_orca_dir": "~/Library/Application Support/OrcaSlicer",
+  "local_scope_subdir": "user/default",
+  "sync_folders": [
+    "filament",
+    "machine",
+    "process"
+  ],
   "repo_mirror_dir": "./profiles",
   "exclude_substrings": [
     "/cache/",

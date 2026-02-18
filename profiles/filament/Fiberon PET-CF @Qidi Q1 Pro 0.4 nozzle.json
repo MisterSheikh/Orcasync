@@ -1,0 +1,37 @@
+{
+    "complete_print_exhaust_fan_speed": [
+        "100"
+    ],
+    "default_filament_colour": [
+        "#000000"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "70"
+    ],
+    "filament_cost": [
+        "70"
+    ],
+    "filament_density": [
+        "1.34"
+    ],
+    "filament_settings_id": [
+        "Fiberon PET-CF @Qidi Q1 Pro 0.4 nozzle"
+    ],
+    "filament_type": [
+        "PET-CF"
+    ],
+    "filament_vendor": [
+        "Fiberon"
+    ],
+    "from": "User",
+    "inherits": "QIDI PET-CF @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Fiberon PET-CF @Qidi Q1 Pro 0.4 nozzle",
+    "nozzle_temperature_range_low": [
+        "270"
+    ],
+    "temperature_vitrification": [
+        "147"
+    ],
+    "version": "2.3.0.3"
+}

@@ -1,0 +1,55 @@
+{
+    "activate_air_filtration": [
+        "0"
+    ],
+    "default_filament_colour": [
+        "#303030"
+    ],
+    "during_print_exhaust_fan_speed": [
+        "0"
+    ],
+    "filament_cost": [
+        "39.37"
+    ],
+    "filament_max_volumetric_speed": [
+        "10"
+    ],
+    "filament_retraction_length": [
+        "0.4"
+    ],
+    "filament_settings_id": [
+        "Overture TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle - Refined"
+    ],
+    "filament_vendor": [
+        "Overture"
+    ],
+    "from": "User",
+    "hot_plate_temp": [
+        "45"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "45"
+    ],
+    "inherits": "Qidi TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle",
+    "is_custom_defined": "0",
+    "name": "Overture TPU 95A-HF @Qidi Q1 Pro 0.4 nozzle - Refined",
+    "nozzle_temperature": [
+        "235"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "235"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "nozzle_temperature_range_low": [
+        "220"
+    ],
+    "pressure_advance": [
+        "0.25"
+    ],
+    "slow_down_layer_time": [
+        "6"
+    ],
+    "version": "2.2.0.4"
+}
