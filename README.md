@@ -19,6 +19,9 @@ The script also prints these paths every run so you can verify exactly where dat
 python3 sync.py status
 python3 sync.py push -m "Sync OrcaSlicer profiles"
 python3 sync.py pull
+python3 sync.py apply
+python3 sync.py apply --prune
+python3 sync.py wipe-profiles --yes
 ```
 
 ## Workflow
@@ -29,17 +32,35 @@ python3 sync.py pull
 python3 sync.py push -m "Update profiles"
 ```
 
-2. On machine B, run:
+2. On machine B, fetch latest repo changes only (no local overwrite):
 
 ```bash
 python3 sync.py pull
 ```
 
+3. When you are ready to overwrite local Orca profile files from repo mirror:
+
+```bash
+python3 sync.py apply
+```
+
+If you also want to remove local scoped files not present in mirror:
+
+```bash
+python3 sync.py apply --prune
+```
+
+## Command Behavior
+
+- `push`: sync local scoped folders -> `profiles/`, then commit + push.
+- `pull`: `git pull --rebase` only; does not touch local Orca folders.
+- `apply`: copy/overwrite `profiles/` -> local scoped Orca folders (no deletions unless `--prune`).
+- `wipe-profiles --yes`: clears all files under `profiles/` only (never touches local Orca folders).
+
 ## Conflict Behavior
 
 - A conflict is detected when both local and mirror changed the same file since last successful sync.
-- On conflict, `push`/`pull` stops and lists files.
-- Resolve manually, then run the command again.
+- On conflict, `push` stops and lists files.
 
 ## First Run Notes
 

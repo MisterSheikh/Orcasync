@@ -13,6 +13,8 @@ Commands:
 - python3 sync.py status
 - python3 sync.py push [-m "message"]
 - python3 sync.py pull
+- python3 sync.py apply [--prune]
+- python3 sync.py wipe-profiles --yes
 """
 
 from __future__ import annotations
@@ -27,7 +29,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set
 
 # Resolve repository root as the directory containing this script.
 REPO_ROOT = Path(__file__).resolve().parent
@@ -430,51 +432,98 @@ def cmd_push(cfg: dict, message: str) -> int:
 
 
 def cmd_pull(cfg: dict) -> int:
-    """Pull latest git changes, then copy mirror -> local.
+    """Pull latest git changes into repo only (no local Orca writes)."""
+    print_storage_locations(cfg)
 
-    Pull is blocked if conflicts are detected so we avoid clobbering local edits.
-    """
-    local_scope: Path = cfg["_local_scope_resolved"]
-    mirror_dir: Path = cfg["_mirror_dir_resolved"]
-    excludes: List[str] = cfg["exclude_substrings"]
-    sync_folders: List[str] = cfg["sync_folders"]
-
-    # Bring repo mirror up to date first.
+    # Bring repo mirror up to date.
     try:
         run_git("pull", "--rebase")
     except subprocess.CalledProcessError as e:
         print(e.stderr or e.stdout)
         return e.returncode or 1
 
-    local_hashes = collect_hashes_scoped(local_scope, sync_folders, excludes)
-    mirror_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
-    base_hashes = load_state()
-    diff = compute_three_way(local_hashes, mirror_hashes, base_hashes)
+    print("Pulled latest changes into repo mirror only.")
+    print("No files were copied to local OrcaSlicer profiles.")
+    return 0
+
+
+def cmd_apply(cfg: dict, prune: bool) -> int:
+    """Copy/overwrite repo mirror -> local OrcaSlicer scope.
+
+    By default this does not delete local files that do not exist in mirror.
+    Use --prune to mirror exactly (delete local-only files).
+    """
+    local_scope: Path = cfg["_local_scope_resolved"]
+    mirror_dir: Path = cfg["_mirror_dir_resolved"]
+    excludes: List[str] = cfg["exclude_substrings"]
+    sync_folders: List[str] = cfg["sync_folders"]
 
     print_storage_locations(cfg)
 
-    if diff.conflicts:
-        print("\nPull blocked due to conflicts:")
-        for rel in diff.conflicts[:25]:
-            print(f"  - {rel}")
-        print("Resolve manually, then rerun pull.")
-        return 1
+    mirror_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
+    local_hashes = collect_hashes_scoped(local_scope, sync_folders, excludes)
 
-    # Apply mirror truth to local for changed/added/removed paths.
+    if not mirror_hashes:
+        print("Mirror profiles are empty. Nothing to apply.")
+        return 0
+
     local_scope.mkdir(parents=True, exist_ok=True)
-    to_copy = sorted(set(diff.only_mirror + diff.changed_mirror))
-    to_remove = sorted(set(diff.only_local + diff.changed_local))
 
-    for rel in to_copy:
+    # Copy every mirror file into local scope (overwrites when file exists).
+    for rel in sorted(mirror_hashes.keys()):
         copy_file(mirror_dir, local_scope, rel)
-    for rel in to_remove:
-        remove_file(local_scope, rel)
 
-    # Baseline should match the mirror after a successful pull apply.
-    new_hashes = collect_hashes_scoped(mirror_dir, sync_folders, excludes)
-    save_state(new_hashes)
+    if prune:
+        local_only = sorted(set(local_hashes.keys()) - set(mirror_hashes.keys()))
+        for rel in local_only:
+            remove_file(local_scope, rel)
+        print(f"Applied mirror and pruned {len(local_only)} local-only files.")
+    else:
+        print("Applied mirror files to local (no local deletions).")
 
-    print("Pull sync applied to local OrcaSlicer directory.")
+    # Baseline follows mirror content after an explicit apply operation.
+    save_state(mirror_hashes)
+    return 0
+
+
+def cmd_wipe_profiles(cfg: dict, yes: bool, message: Optional[str], push: bool) -> int:
+    """Delete all files under repo mirror profiles.
+
+    This command does not touch local OrcaSlicer files.
+    """
+    mirror_dir: Path = cfg["_mirror_dir_resolved"]
+
+    if not yes:
+        print("Refusing to wipe mirror without --yes.")
+        return 2
+
+    print_storage_locations(cfg)
+
+    if not mirror_dir.exists():
+        mirror_dir.mkdir(parents=True, exist_ok=True)
+        print("Mirror directory did not exist; created empty mirror.")
+    else:
+        for child in mirror_dir.iterdir():
+            if child.is_dir():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+        print("Wiped all contents under repo mirror directory.")
+
+    # Empty mirror means empty baseline for scoped files.
+    save_state({})
+
+    if message or push:
+        commit_message = message or "Wipe OrcaSlicer repo mirror profiles"
+        try:
+            committed = git_commit_if_needed(commit_message)
+            if push and committed:
+                run_git("push")
+                print("Pushed mirror wipe commit.")
+        except subprocess.CalledProcessError as e:
+            print(e.stderr or e.stdout)
+            return e.returncode or 1
+
     return 0
 
 
@@ -493,7 +542,32 @@ def build_parser() -> argparse.ArgumentParser:
         help="Git commit message for push",
     )
 
-    sub.add_parser("pull", help="git pull, then sync repo mirror -> local")
+    sub.add_parser("pull", help="git pull only (updates repo mirror, no local Orca writes)")
+
+    apply = sub.add_parser("apply", help="Copy/overwrite repo mirror -> local Orca profiles")
+    apply.add_argument(
+        "--prune",
+        action="store_true",
+        help="Also delete local scoped files that are missing from mirror",
+    )
+
+    wipe = sub.add_parser("wipe-profiles", help="Delete all files under repo mirror profiles")
+    wipe.add_argument(
+        "--yes",
+        action="store_true",
+        help="Required confirmation flag for destructive mirror wipe",
+    )
+    wipe.add_argument(
+        "-m",
+        "--message",
+        default=None,
+        help="Optional commit message after wipe",
+    )
+    wipe.add_argument(
+        "--push",
+        action="store_true",
+        help="Push wipe commit to remote after committing",
+    )
 
     return p
 
@@ -509,6 +583,10 @@ def main() -> int:
         return cmd_push(cfg, args.message)
     if args.command == "pull":
         return cmd_pull(cfg)
+    if args.command == "apply":
+        return cmd_apply(cfg, args.prune)
+    if args.command == "wipe-profiles":
+        return cmd_wipe_profiles(cfg, args.yes, args.message, args.push)
 
     return 2
 
