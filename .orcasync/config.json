@@ -1,0 +1,13 @@
+{
+  "local_orca_dir": "~/Library/Application Support/OrcaSlicer",
+  "repo_mirror_dir": "./profiles",
+  "exclude_substrings": [
+    "/cache/",
+    "/Cache/",
+    "/logs/",
+    "/Logs/",
+    ".DS_Store",
+    "Thumbs.db",
+    ".lock"
+  ]
+}

@@ -1,0 +1,12 @@
+# Local Python cache
+__pycache__/
+*.pyc
+
+# Optional local logs
+*.log
+
+# Keep tool state/config tracked unless you choose to ignore them.
+# If you prefer state to stay local-only, uncomment the next line:
+# .orcasync/state.json
+
+.DS_Store
